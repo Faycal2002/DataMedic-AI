@@ -58,3 +58,16 @@ Thumbs.db
 
 # Jupyter
 .ipynb_checkpoints/
+
+# Generated application files
+assets/generated/
+reports/generated/
+
+# Uploaded / local datasets
+data/raw/*.csv
+data/processed/*.csv
+
+# Local uploaded files
+static/uploads/
+# CSV datasets
+*.csv

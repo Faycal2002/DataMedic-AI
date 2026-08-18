@@ -1,0 +1,422 @@
+{% extends "base.html" %}
+
+{% block title %}
+DataMedic AI
+{% endblock %}
+
+
+{% block content %}
+
+<section class="hero">
+
+    <div class="hero-badge">
+        AI-Powered Dataset Analysis
+    </div>
+
+
+    <h1>
+        Understand your data
+        <span>before building your model.</span>
+    </h1>
+
+
+    <p class="hero-description">
+        Upload a CSV dataset and DataMedic AI will analyse
+        its quality, compare machine-learning models,
+        explain the best model with SHAP, and generate
+        a downloadable PDF report.
+    </p>
+
+
+    <div class="upload-card">
+
+        <div class="upload-icon">
+            ↑
+        </div>
+
+
+        <h2>
+            Upload your dataset
+        </h2>
+
+
+        <p>
+            Select a CSV file to begin your analysis.
+        </p>
+
+
+        <form
+            method="POST"
+            enctype="multipart/form-data"
+        >
+
+
+            <!-- FILE UPLOAD AREA -->
+
+            <div
+                class="file-upload"
+                id="file-upload"
+            >
+
+
+                <!-- EMPTY STATE -->
+
+                <div
+                    class="upload-empty"
+                    id="upload-empty"
+                >
+
+                    <div class="upload-file-icon">
+                        ↑
+                    </div>
+
+                    <span class="file-main-text">
+                        Choose CSV File
+                    </span>
+
+                    <span class="file-small-text">
+                        CSV files supported
+                    </span>
+
+                </div>
+
+
+                <!-- SELECTED FILE STATE -->
+
+                <div
+                    class="upload-selected"
+                    id="upload-selected"
+                >
+
+                    <div class="selected-icon">
+                        ✓
+                    </div>
+
+
+                    <div class="selected-info">
+
+                        <div class="selected-label">
+                            FILE SELECTED
+                        </div>
+
+                        <div
+                            class="selected-name"
+                            id="selected-name"
+                        >
+                            dataset.csv
+                        </div>
+
+                        <div
+                            class="selected-size"
+                            id="selected-size"
+                        >
+                            CSV file
+                        </div>
+
+                    </div>
+
+
+                    <button
+                        type="button"
+                        class="change-file"
+                        id="change-file"
+                    >
+                        Change
+                    </button>
+
+                </div>
+
+            </div>
+
+
+            <!-- REAL FILE INPUT -->
+
+            <input
+                type="file"
+                id="dataset"
+                name="dataset"
+                accept=".csv"
+                required
+            >
+
+
+            <!-- SUBMIT -->
+
+            <button
+                class="primary-button"
+                type="submit"
+            >
+                Analyse Dataset →
+            </button>
+
+
+        </form>
+
+    </div>
+
+</section>
+
+
+<section class="feature-section">
+
+
+    <div class="feature-card">
+
+        <div class="feature-number">
+            01
+        </div>
+
+        <h3>
+            Data Quality
+        </h3>
+
+        <p>
+            Detect missing values, duplicates,
+            outliers and data-quality issues.
+        </p>
+
+    </div>
+
+
+    <div class="feature-card">
+
+        <div class="feature-number">
+            02
+        </div>
+
+        <h3>
+            Machine Learning
+        </h3>
+
+        <p>
+            Automatically compare suitable
+            classification or regression models.
+        </p>
+
+    </div>
+
+
+    <div class="feature-card">
+
+        <div class="feature-number">
+            03
+        </div>
+
+        <h3>
+            Explainable AI
+        </h3>
+
+        <p>
+            Understand the most influential
+            features using SHAP.
+        </p>
+
+    </div>
+
+
+    <div class="feature-card">
+
+        <div class="feature-number">
+            04
+        </div>
+
+        <h3>
+            PDF Report
+        </h3>
+
+        <p>
+            Generate a clear downloadable
+            report containing the results.
+        </p>
+
+    </div>
+
+
+</section>
+
+
+<!-- =====================================================
+     FILE SELECTION JAVASCRIPT
+     ===================================================== -->
+
+<script>
+
+const fileInput = document.getElementById("dataset");
+
+const uploadBox = document.getElementById("file-upload");
+
+const uploadEmpty = document.getElementById("upload-empty");
+
+const uploadSelected = document.getElementById("upload-selected");
+
+const selectedName = document.getElementById("selected-name");
+
+const selectedSize = document.getElementById("selected-size");
+
+const changeFile = document.getElementById("change-file");
+
+
+/*
+---------------------------------------------------------
+When the user selects a CSV
+---------------------------------------------------------
+*/
+
+fileInput.addEventListener("change", function () {
+
+    const file = this.files[0];
+
+
+    if (!file) {
+
+        resetUpload();
+
+        return;
+    }
+
+
+    /*
+    Check that it is a CSV
+    */
+
+    const fileName = file.name.toLowerCase();
+
+    if (!fileName.endsWith(".csv")) {
+
+        alert("Please select a CSV file.");
+
+        fileInput.value = "";
+
+        resetUpload();
+
+        return;
+    }
+
+
+    /*
+    Display filename
+    */
+
+    selectedName.textContent = file.name;
+
+
+    /*
+    Display file size
+    */
+
+    const sizeKB = file.size / 1024;
+
+
+    if (sizeKB < 1024) {
+
+        selectedSize.textContent =
+            "CSV file · " +
+            sizeKB.toFixed(1) +
+            " KB";
+
+    }
+
+    else {
+
+        const sizeMB = sizeKB / 1024;
+
+        selectedSize.textContent =
+            "CSV file · " +
+            sizeMB.toFixed(2) +
+            " MB";
+    }
+
+
+    /*
+    Change interface
+    */
+
+    uploadEmpty.style.display = "none";
+
+    uploadSelected.style.display = "flex";
+
+    uploadBox.classList.add("file-selected");
+
+});
+
+
+/*
+---------------------------------------------------------
+Change file button
+---------------------------------------------------------
+*/
+
+changeFile.addEventListener("click", function (event) {
+
+    event.stopPropagation();
+
+    fileInput.click();
+
+});
+
+
+/*
+---------------------------------------------------------
+Click anywhere on upload box
+---------------------------------------------------------
+*/
+
+uploadBox.addEventListener("click", function (event) {
+
+    if (
+        event.target === changeFile ||
+        changeFile.contains(event.target)
+    ) {
+
+        return;
+    }
+
+
+    fileInput.click();
+
+});
+
+
+/*
+---------------------------------------------------------
+Reset upload
+---------------------------------------------------------
+*/
+
+function resetUpload() {
+
+    uploadEmpty.style.display = "flex";
+
+    uploadSelected.style.display = "none";
+
+    uploadBox.classList.remove("file-selected");
+
+}
+
+
+/*
+---------------------------------------------------------
+Prevent accidental form submission
+if no file is selected
+---------------------------------------------------------
+*/
+
+const form = fileInput.closest("form");
+
+
+form.addEventListener("submit", function (event) {
+
+    if (!fileInput.files.length) {
+
+        event.preventDefault();
+
+        alert("Please select a CSV file first.");
+
+    }
+
+});
+
+</script>
+
+
+{% endblock %}

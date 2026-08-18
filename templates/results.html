@@ -1,0 +1,566 @@
+{% extends "base.html" %}
+
+{% block title %}
+Analysis Results · DataMedic AI
+{% endblock %}
+
+
+{% block content %}
+
+<section class="results-page">
+
+
+    <!-- =====================================================
+         HERO
+         ===================================================== -->
+
+    <div class="results-hero">
+
+        <div class="hero-badge">
+            ANALYSIS COMPLETE
+        </div>
+
+
+        <h1>
+            Your data,
+            <span>decoded.</span>
+        </h1>
+
+
+        <p>
+            DataMedic AI has analysed your dataset,
+            compared machine-learning models and identified
+            the most important features.
+        </p>
+
+    </div>
+
+
+
+    <!-- =====================================================
+         DATASET HEADER
+         ===================================================== -->
+
+    <div class="results-dataset-card">
+
+        <div class="results-dataset-info">
+
+            <div class="results-small-label">
+                DATASET ANALYSED
+            </div>
+
+            <h2>
+                {{ dataset_name }}
+            </h2>
+
+        </div>
+
+
+        <div class="results-target">
+
+            <span>
+                TARGET
+            </span>
+
+            <strong>
+                {{ target_column }}
+            </strong>
+
+        </div>
+
+
+        <div class="analysis-status">
+            ✓ Complete
+        </div>
+
+    </div>
+
+
+
+    <!-- =====================================================
+         DATASET OVERVIEW
+         ===================================================== -->
+
+    <section class="results-section">
+
+        <div class="results-section-heading">
+
+            <div>
+
+                <div class="results-section-label">
+                    DATASET OVERVIEW
+                </div>
+
+                <h2>
+                    Data quality at a glance
+                </h2>
+
+            </div>
+
+        </div>
+
+
+        <div class="results-stat-grid">
+
+
+            <div class="results-stat-card">
+
+                <div class="results-stat-icon">
+                    ↕
+                </div>
+
+                <div class="results-stat-value">
+                    {{ analysis.n_rows }}
+                </div>
+
+                <div class="results-stat-name">
+                    Rows analysed
+                </div>
+
+            </div>
+
+
+            <div class="results-stat-card">
+
+                <div class="results-stat-icon">
+                    #
+                </div>
+
+                <div class="results-stat-value">
+                    {{ analysis.n_columns }}
+                </div>
+
+                <div class="results-stat-name">
+                    Features
+                </div>
+
+            </div>
+
+
+            <div class="results-stat-card">
+
+                <div class="results-stat-icon">
+                    !
+                </div>
+
+                <div class="results-stat-value">
+                    {{ analysis.n_missing }}
+                </div>
+
+                <div class="results-stat-name">
+                    Missing values
+                </div>
+
+            </div>
+
+
+            <div class="results-stat-card">
+
+                <div class="results-stat-icon warning-stat-icon">
+                    ≡
+                </div>
+
+                <div class="results-stat-value">
+                    {{ analysis.n_duplicates }}
+                </div>
+
+                <div class="results-stat-name">
+                    Duplicate rows
+                </div>
+
+            </div>
+
+
+        </div>
+
+
+        <!-- QUALITY SCORE -->
+
+        <div class="quality-card">
+
+            <div class="quality-left">
+
+                <div class="quality-icon-large">
+                    ✓
+                </div>
+
+                <div>
+
+                    <div class="quality-label">
+                        DATA QUALITY SCORE
+                    </div>
+
+                    <h3>
+                        {{ analysis.quality.score }}/100
+                    </h3>
+
+                </div>
+
+            </div>
+
+
+            <div class="quality-progress-area">
+
+                <div class="quality-progress">
+
+                    <div
+                        class="quality-progress-bar"
+                        style="width: {{ analysis.quality.score }}%;"
+                    ></div>
+
+                </div>
+
+                <span>
+                    Dataset quality
+                </span>
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+
+    <!-- =====================================================
+         MACHINE LEARNING
+         ===================================================== -->
+
+    <section class="results-section">
+
+
+        <div class="results-section-heading">
+
+            <div>
+
+                <div class="results-section-label">
+                    MACHINE LEARNING
+                </div>
+
+                <h2>
+                    Model comparison
+                </h2>
+
+                <p>
+                    Problem type:
+                    <strong>
+                        {{ training.problem_type|capitalize }}
+                    </strong>
+                </p>
+
+            </div>
+
+
+            <div class="model-count">
+                {{ model_results|length }} models
+            </div>
+
+        </div>
+
+
+
+        <div class="model-grid">
+
+
+            {% for model in model_results %}
+
+            <div
+                class="model-card
+                {% if model.is_best %}
+                    best-model-card
+                {% endif %}"
+            >
+
+
+                {% if model.is_best %}
+
+                <div class="best-model-badge">
+                    ★ BEST MODEL
+                </div>
+
+                {% endif %}
+
+
+                <div class="model-card-top">
+
+                    <div class="model-number">
+                        {{ "%02d"|format(loop.index) }}
+                    </div>
+
+                    <div>
+
+                        <h3>
+                            {{ model.name }}
+                        </h3>
+
+                        {% if model.is_best %}
+
+                        <span class="model-selected">
+                            Selected model
+                        </span>
+
+                        {% endif %}
+
+                    </div>
+
+                </div>
+
+
+                <div class="model-metrics">
+
+
+                    {% for metric_name, metric_value in model.metrics.items() %}
+
+                    <div class="metric-row">
+
+                        <span>
+                            {{ metric_name|upper }}
+                        </span>
+
+                        <strong>
+                            {{ "%.4f"|format(metric_value) }}
+                        </strong>
+
+                    </div>
+
+                    {% endfor %}
+
+
+                </div>
+
+            </div>
+
+            {% endfor %}
+
+
+        </div>
+
+
+    </section>
+
+
+
+    <!-- =====================================================
+         BEST MODEL
+         ===================================================== -->
+
+    <section class="best-model-section">
+
+
+        <div class="best-model-content">
+
+            <div class="best-model-icon">
+                ★
+            </div>
+
+
+            <div>
+
+                <div class="results-section-label">
+                    RECOMMENDED MODEL
+                </div>
+
+                <h2>
+                    {{ training.best_model_name }}
+                </h2>
+
+                <p>
+                    This model achieved the strongest overall
+                    performance on your dataset and was selected
+                    for further explainability analysis.
+                </p>
+
+            </div>
+
+
+        </div>
+
+
+        <div class="best-model-arrow">
+            →
+        </div>
+
+
+    </section>
+
+
+
+    <!-- =====================================================
+         SHAP
+         ===================================================== -->
+
+    <section class="results-section shap-section">
+
+
+        <div class="results-section-heading">
+
+            <div>
+
+                <div class="results-section-label">
+                    EXPLAINABLE AI · SHAP
+                </div>
+
+                <h2>
+                    What drives your model?
+                </h2>
+
+                <p>
+                    These features had the strongest influence
+                    on the selected model.
+                </p>
+
+            </div>
+
+        </div>
+
+
+
+        <div class="shap-card">
+
+
+            <div class="shap-table-header">
+
+                <div>
+                    RANK
+                </div>
+
+                <div>
+                    FEATURE
+                </div>
+
+                <div>
+                    IMPORTANCE
+                </div>
+
+            </div>
+
+
+
+            {% for feature in top_features %}
+
+            <div class="shap-row">
+
+
+                <div class="shap-rank">
+
+                    {{ "%02d"|format(loop.index) }}
+
+                </div>
+
+
+                <div class="shap-feature">
+
+                    <span class="shap-dot"></span>
+
+                    <strong>
+                        {{ feature.feature }}
+                    </strong>
+
+                </div>
+
+
+                <div class="shap-importance">
+
+                    <div class="importance-bar-container">
+
+                        <div
+                            class="importance-bar"
+                            style="
+                                width:
+                                {{
+                                    (feature.importance /
+                                    top_features[0].importance * 100)
+                                    if top_features[0].importance
+                                    else 0
+                                }}%;
+                            "
+                        ></div>
+
+                    </div>
+
+
+                    <span>
+                        {{ "%.4f"|format(feature.importance) }}
+                    </span>
+
+                </div>
+
+
+            </div>
+
+            {% endfor %}
+
+
+        </div>
+
+
+    </section>
+
+
+
+    <!-- =====================================================
+         PDF REPORT
+         ===================================================== -->
+
+    <section class="report-card">
+
+
+        <div class="report-icon">
+            ↓
+        </div>
+
+
+        <div class="report-content">
+
+            <div class="results-section-label">
+                FINAL REPORT
+            </div>
+
+            <h2>
+                Take your analysis with you.
+            </h2>
+
+            <p>
+                Generate a professional PDF containing
+                the dataset overview, model comparison,
+                best model and explainability results.
+            </p>
+
+        </div>
+
+
+        <form
+            method="POST"
+            action="{{ url_for('download_report') }}"
+            class="report-form"
+        >
+
+            <label for="report_name">
+                Report name
+            </label>
+
+
+            <input
+                type="text"
+                id="report_name"
+                name="report_name"
+                placeholder="e.g. Insurance Analysis Report"
+            >
+
+
+            <button
+                type="submit"
+                class="primary-button report-button"
+            >
+                Download PDF →
+            </button>
+
+        </form>
+
+
+    </section>
+
+
+</section>
+
+{% endblock %}

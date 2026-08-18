@@ -1,0 +1,333 @@
+{% extends "base.html" %}
+
+{% block title %}
+Select Target · DataMedic AI
+{% endblock %}
+
+
+{% block content %}
+
+<section class="select-page">
+
+    <!-- PAGE INTRO -->
+
+    <div class="select-hero">
+
+        <div class="hero-badge">
+            STEP 01 · DATASET ANALYSIS
+        </div>
+
+        <h1>
+            Prepare your data
+            <span>for analysis.</span>
+        </h1>
+
+        <p>
+            Your dataset has been successfully loaded.
+            Review its quality and choose the variable
+            you want DataMedic AI to predict.
+        </p>
+
+    </div>
+
+
+    <!-- DATASET CARD -->
+
+    <div class="dataset-main-card">
+
+        <div class="dataset-header">
+
+            <div>
+
+                <div class="dataset-label">
+                    DATASET LOADED
+                </div>
+
+                <h2>
+                    {{ dataset_name }}
+                </h2>
+
+            </div>
+
+
+            <div class="dataset-badge">
+                ✓ Ready for analysis
+            </div>
+
+        </div>
+
+
+        <!-- STATISTICS -->
+
+        <div class="dataset-stats">
+
+
+            <div class="dataset-stat">
+
+                <div class="stat-icon">
+                    ↕
+                </div>
+
+                <div>
+
+                    <div class="stat-value">
+                        {{ analysis.n_rows }}
+                    </div>
+
+                    <div class="stat-name">
+                        Rows
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <div class="dataset-stat">
+
+                <div class="stat-icon">
+                    #
+                </div>
+
+                <div>
+
+                    <div class="stat-value">
+                        {{ analysis.n_columns }}
+                    </div>
+
+                    <div class="stat-name">
+                        Columns
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <div class="dataset-stat">
+
+                <div class="stat-icon">
+                    !
+                </div>
+
+                <div>
+
+                    <div class="stat-value">
+                        {{ analysis.n_missing }}
+                    </div>
+
+                    <div class="stat-name">
+                        Missing values
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <div class="dataset-stat">
+
+                <div class="stat-icon quality-icon">
+                    ✓
+                </div>
+
+                <div>
+
+                    <div class="stat-value quality-value">
+                        {{ analysis.quality.score }}/100
+                    </div>
+
+                    <div class="stat-name">
+                        Data quality
+                    </div>
+
+                </div>
+
+            </div>
+
+
+        </div>
+
+    </div>
+
+
+    <!-- TARGET SELECTION -->
+
+    <div class="target-selection-card">
+
+        <div class="target-top">
+
+            <div class="target-number">
+                01
+            </div>
+
+            <div>
+
+                <div class="target-label">
+                    TARGET VARIABLE
+                </div>
+
+                <h2>
+                    What should the model predict?
+                </h2>
+
+                <p>
+                    Select one column from your dataset.
+                    DataMedic AI will use it as the target
+                    for machine-learning analysis.
+                </p>
+
+            </div>
+
+        </div>
+
+
+        <form method="POST">
+
+
+            <div class="target-form">
+
+                <div class="target-select-wrapper">
+
+                    <label for="target_column">
+                        Target column
+                    </label>
+
+                    <select
+                        id="target_column"
+                        name="target_column"
+                        required
+                    >
+
+                        <option value="">
+                            Choose a target column
+                        </option>
+
+                        {% for column in columns %}
+
+                        <option value="{{ column }}">
+                            {{ column }}
+                        </option>
+
+                        {% endfor %}
+
+                    </select>
+
+                </div>
+
+
+                <button
+                    class="primary-button target-button"
+                    type="submit"
+                >
+                    Run Analysis →
+                </button>
+
+            </div>
+
+
+        </form>
+
+    </div>
+
+
+    <!-- PROCESS -->
+
+    <div class="process-section">
+
+        <div class="process-header">
+
+            <div class="hero-badge">
+                WHAT HAPPENS NEXT
+            </div>
+
+            <h2>
+                From data to
+                <span>intelligence.</span>
+            </h2>
+
+        </div>
+
+
+        <div class="process-grid">
+
+
+            <div class="process-card active-process">
+
+                <div class="process-number">
+                    01
+                </div>
+
+                <h3>
+                    Data Quality
+                </h3>
+
+                <p>
+                    Your dataset is checked for missing values,
+                    duplicates and quality issues.
+                </p>
+
+            </div>
+
+
+            <div class="process-card">
+
+                <div class="process-number">
+                    02
+                </div>
+
+                <h3>
+                    Machine Learning
+                </h3>
+
+                <p>
+                    Multiple suitable models are trained
+                    and compared automatically.
+                </p>
+
+            </div>
+
+
+            <div class="process-card">
+
+                <div class="process-number">
+                    03
+                </div>
+
+                <h3>
+                    Explainable AI
+                </h3>
+
+                <p>
+                    SHAP identifies the features that have
+                    the strongest influence on the model.
+                </p>
+
+            </div>
+
+
+            <div class="process-card">
+
+                <div class="process-number">
+                    04
+                </div>
+
+                <h3>
+                    PDF Report
+                </h3>
+
+                <p>
+                    All important findings can be exported
+                    into a downloadable report.
+                </p>
+
+            </div>
+
+
+        </div>
+
+    </div>
+
+</section>
+
+{% endblock %}
